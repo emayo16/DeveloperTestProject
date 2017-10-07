@@ -2,9 +2,9 @@
 
 /**
  * @ngdoc function
- * @name myApp.controller:MainCtrl
+ * @name myApp.controller:MapCtrl
  * @description
- * # MainCtrl
+ * # MapCtrl
  * Controller of the myApp
  */
 angular.module('myApp')
@@ -40,8 +40,29 @@ angular.module('myApp')
 		};
 
 	}])
-	.controller('MainCtrl', ['$scope', 'trackAPIService', function ($scope, trackAPIService) {
+	.controller('MapCtrl', ['$scope', 'trackAPIService', function ($scope, trackAPIService) {
 		var markers = [];
+		var tracks = [];
+		var map;
+		// Get all the track data from API
+		trackAPIService.getAllTracks()
+		.then(function(response){ 
+			tracks = response;
+			initMap(tracks);
+		}, function(err){
+			alert("Error retreiving track data!");
+		});
+		
+		// Get realtime updates to database for live map updates
+		var socket = io.connect('http://localhost:3000');
+			socket.on('pushUpdatesToClient', function (data) {
+			//console.log(data);
+			tracks.push(data);
+			var track = [data];
+			//console.log(track);
+			addMarkers(track, map);
+			//socket.emit('requestUpdatesFromServer', { my: 'Update Received' });
+		});
 		// Create a single infowindow for all markers to use
 		var infowindow = new google.maps.InfoWindow;
 		// Removes the markers with the specified mmsid from the map, but keeps them in the array.
@@ -53,21 +74,26 @@ angular.module('myApp')
 			}
 		}
 
-		// Get all the track data from API
-		trackAPIService.getAllTracks()
-		.then(function(response){ 
-			$scope.tracks = response;
-			initMap($scope);
-		}, function(err){
-			alert("Error retreiving track data!");
-		});
+		// Hides all markers
+		function hideMarkers() {
+			for (var i = 0; i < markers.length; i++) {
+				markers[i].setMap(null);
+			}
+		}
+
+		// Shows all markers
+		function showMarkers(map) {
+			for (var i = 0; i < markers.length; i++) {
+				markers[i].setMap(map);
+			}
+		}
 
 		// Initialize the map
-		function initMap($scope){
-			console.log($scope.tracks);
+		function initMap(tracks){
+			//console.log(tracks);
 			// Get most recently added track to set map location
-			var mostRecent = $scope.tracks[$scope.tracks.length-1];
-			console.log(mostRecent);
+			var mostRecent = tracks[tracks.length-1];
+			//console.log(mostRecent);
 			var latitude = parseFloat(mostRecent["latitude"]);
 			var longitude = parseFloat(mostRecent["longitude"]);
 			// Set map start location to most recently added marker
@@ -80,17 +106,17 @@ angular.module('myApp')
 			    panControl: true,
 			    mapTypeId: google.maps.MapTypeId.TERRAIN
 			}
-			var map = new google.maps.Map(mapCanvas, mapOptions);
-			addMarkers($scope, map);
+			map = new google.maps.Map(mapCanvas, mapOptions);
+			addMarkers(tracks, map);
 		}
 
 		// Add Markers representing each track
-		function addMarkers($scope, map)
+		function addMarkers(tracks, map)
 		{
 			var uniqueId = 0;
 			var uniqueTitle = "";
 			var image = {
-			  url: '../../images/ship.svg',
+			  url: 'app/client/images/ship.svg',
 			  size: new google.maps.Size(500, 500),
 			  scaledSize: new google.maps.Size(36, 36),
 			  origin: new google.maps.Point(0, 0),
@@ -98,16 +124,16 @@ angular.module('myApp')
 			};
 			var missingInfo = 0;
 			var successCount = 0;
-			for (var i = $scope.tracks.length - 1; i >= 0; i--) 
+			for (var i = tracks.length - 1; i >= 0; i--) 
 			{
-				var name = $scope.tracks[i]["name"];
-				var latitude = $scope.tracks[i]["latitude"];
-				var longitude = $scope.tracks[i]["longitude"];
-				var callsign = $scope.tracks[i]["callsign"];
-				var mmsid = $scope.tracks[i]["mmsid"];
-				var heading = $scope.tracks[i]["heading"];
-				var course = $scope.tracks[i]["course"];
-				var speed = $scope.tracks[i]["speed"];
+				var name = tracks[i]["name"];
+				var latitude = tracks[i]["latitude"];
+				var longitude = tracks[i]["longitude"];
+				var callsign = tracks[i]["callsign"];
+				var mmsid = tracks[i]["mmsid"];
+				var heading = tracks[i]["heading"];
+				var course = tracks[i]["course"];
+				var speed = tracks[i]["speed"];
 				if(name === '' || name == null){
 					console.log("Missing name value for track with mmsid "
 					 + mmsid + "\nSkipping this track.");
@@ -141,7 +167,7 @@ angular.module('myApp')
 				uniqueId += 1;
 				var uniqueMmsid = mmsid + "-" + uniqueId;
 
-				// Hide other track icons associated with this mmsid
+				// Hide other track markers associated with this mmsid
 				clearMarkersByMmsid(mmsid);
 				var marker = new google.maps.Marker({
 				                position: new google.maps.LatLng(latitude, longitude),
@@ -208,7 +234,7 @@ angular.module('myApp')
 						'</table>\n' +
 						'</div>\n' +
 						'</div>';
-					console.log(this);
+					//console.log(this);
 					infowindow.setContent(contentString);
 					infowindow.open(map, this);
 				});
@@ -216,6 +242,9 @@ angular.module('myApp')
 				// Push new marker onto markers array
 				markers.push(marker);
 				successCount += 1;
+
+				//hideMarkers();
+				//showMarkers(map);
 			}
 
 			if(missingInfo > 0){

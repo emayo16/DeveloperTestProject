@@ -32,23 +32,24 @@ router.get('/tracks', function(req, res, next) {
 
 router.post('/tracks/new', function(req, res, next) {
     var tracks = req.body;
-    var toSend = [];
 	r.connect(dbconfig, function(err, conn) {
 		if (err) throw err;
+    	var toSend = [];
 		for (i in tracks)
 		{
 			tracks[i].createdAt = r.now();
 			r.table('tracks').insert(tracks[i], {returnChanges: true}).run(conn).then(function(result) {
+    			//console.log(result.changes[0].new_val);
 		        if (result.inserted !== 1) {
 		            handleError(res)(new Error("Document was not inserted."));
 		        }
 		        else {
-		        	toSend.push(JSON.stringify(result.changes[0].new_val));
+		        	toSend.push(result.changes[0].new_val);
 		        }
 	    	}).error(handleError(res)).finally(next);
 		}
+		setHeadersAndSend(res, toSend);
 	});
-	setHeadersAndSend(res, toSend);
 });
 
 module.exports = router;

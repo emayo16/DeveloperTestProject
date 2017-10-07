@@ -7,7 +7,7 @@ r.connect( dbconfig, function(err, conn) {
 	if (err) throw err;
     // Check to see that 'tracks' table is created with index 'createdAt'
     r.table('tracks').indexWait('createdAt').run(conn).then(function(err, result) {
-        console.log("tracks table is");
+        console.log("tracks table is created.");
     }).error(function(err) {
         // The database/table/index do not exist. Create them.
         r.dbCreate(dbconfig.db).run(conn).finally(function() {
