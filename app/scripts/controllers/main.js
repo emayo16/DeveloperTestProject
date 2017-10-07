@@ -42,7 +42,8 @@ angular.module('myApp')
 	}])
 	.controller('MainCtrl', ['$scope', 'trackAPIService', function ($scope, trackAPIService) {
 		var markers = [];
-		
+		// Create a single infowindow for all markers to use
+		var infowindow = new google.maps.InfoWindow;
 		// Removes the markers with the specified mmsid from the map, but keeps them in the array.
 		function clearMarkersByMmsid(mmsid) {
 			for (var i = 0; i < markers.length; i++) {
@@ -64,6 +65,7 @@ angular.module('myApp')
 		// Initialize the map
 		function initMap($scope){
 			console.log($scope.tracks);
+			// Get most recently added track to set map location
 			var mostRecent = $scope.tracks[$scope.tracks.length-1];
 			console.log(mostRecent);
 			var latitude = parseFloat(mostRecent["latitude"]);
@@ -79,11 +81,11 @@ angular.module('myApp')
 			    mapTypeId: google.maps.MapTypeId.TERRAIN
 			}
 			var map = new google.maps.Map(mapCanvas, mapOptions);
-			setMarkers($scope, map);
+			addMarkers($scope, map);
 		}
 
-		// Set Markers representing each track
-		function setMarkers($scope, map)
+		// Add Markers representing each track
+		function addMarkers($scope, map)
 		{
 			var uniqueId = 0;
 			var uniqueTitle = "";
@@ -158,11 +160,13 @@ angular.module('myApp')
 				                uniqueId: uniqueId
 				             });
 
-				marker.addListener('click', function () {
+				// Add click event to marker to display track properties in infowindow
+				marker.addListener('click', function (event) {
+
 					// Marker window overlay content
 					var contentString = 
-						'<div class="info-window" id="' + uniqueMmsid + '">\n' +
-						'<h3>' + name + '</h3>\n' +
+						'<div class="info-window" id="' + this.uniqueMmsid + '">\n' +
+						'<h3>' + this.name + '</h3>\n' +
 						'<div class="info-content">\n' +
 						'<table class="table">\n' +
 						'<tr>\n' +
@@ -184,33 +188,29 @@ angular.module('myApp')
 						'</th>\n' +
 						'</tr>\n' +
 						'<tr>\n' +
-						'<td>' + name +
+						'<td>' + this.name +
 						'</td>\n' +
-						'<td>' + mmsid +
+						'<td>' + this.mmsid +
 						'</td>\n' +
-						'<td>' + callsign +
+						'<td>' + this.callsign +
 						'</td>\n' +
-						'<td>' + latitude +
+						'<td>' + this.latitude +
 						'</td>\n' +
-						'<td>' + longitude +
+						'<td>' + this.longitude +
 						'</td>\n' +
-						'<td>' + speed +
+						'<td>' + this.speed +
 						'</td>\n' +
-						'<td>' + heading +
+						'<td>' + this.heading +
 						'</td>\n' +
-						'<td>' + course +
+						'<td>' + this.course +
 						'</td>\n' +
 						'</tr>\n' +
 						'</table>\n' +
 						'</div>\n' +
 						'</div>';
-
-					var infowindow = new google.maps.InfoWindow({
-						content: contentString,
-						maxWidth: 800,
-						position: new google.maps.LatLng(marker["latitude"], marker["longitude"])
-					});
-					infowindow.open(map, marker);
+					console.log(this);
+					infowindow.setContent(contentString);
+					infowindow.open(map, this);
 				});
 				
 				// Push new marker onto markers array
@@ -219,14 +219,14 @@ angular.module('myApp')
 			}
 
 			if(missingInfo > 0){
-				alert("Missing required information in " 
+				console.log("Missing required information in " 
 				+ missingInfo + " tracks.\nThese tracks were skipped.");	
 			}
 
 			if(successCount > 0){
-				alert("Imported " + successCount + " tracks successfully.");	
+				console.log("Imported " + successCount + " tracks successfully.");	
 			} else {
-				alert("There were no tracks successfully imported.\nPlease send \
+				console.log("There were no tracks successfully imported.\nPlease send \
 					a POST request containing JSON data of track data objects to \
 					http://localhost:3000/api/tracks/new\nEach object in the array \
 					should contain the following properties:\nname, latitude, longitude, \
