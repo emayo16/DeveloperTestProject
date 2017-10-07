@@ -21,7 +21,7 @@ module.exports = function (grunt) {
 
   // Configurable paths for the application
   var appConfig = {
-    app: require('./bower.json').appPath || 'app',
+    app: require('./bower.json').appPath || 'app/client',
     dist: 'dist'
   };
 
@@ -86,8 +86,8 @@ module.exports = function (grunt) {
                 connect.static('./bower_components')
               ),
               connect().use(
-                '/app/styles',
-                connect.static('./app/styles')
+                '/app/client/styles',
+                connect.static('./app/client/styles')
               ),
               connect.static(appConfig.app)
             ];
