@@ -6,52 +6,55 @@
 
 ### Prerequisites
 
-   Must have git, RethinkDB, and NodeJS installed on your machine.
+   Must have curl, git, RethinkDB, and NodeJS installed on your machine.
+   
+#### Curl
+   **Debian-based Linux:** `sudo apt-get install -y curl`
 
 #### Git
    *For other systems please see: <https://git-scm.com/book/en/v2/Getting-Started-Installing-Git>*
 		
-   **Debian-based Linux:** `sudo apt-get install -y git-all`
+   **Debian-based Linux:** `sudo apt-get install -y git`
 
-   **RPM-based Linux:** `sudo dnf install git-all`
+   **RPM-based Linux:** `sudo dnf install git`
 
 #### RethinkDB
    *For other systems please see: <https://rethinkdb.com/docs/install/>*
 
    **Ubuntu Linux:**
-        `source /etc/lsb-release && echo "deb http://download.rethinkdb.com/apt $DISTRIB_CODENAME main" | sudo tee /etc/apt/sources.list.d/rethinkdb.list
-         wget -qO- https://download.rethinkdb.com/apt/pubkey.gpg | sudo apt-key add -
-         sudo apt-get update
-         sudo apt-get install -y rethinkdb`
+        `source /etc/lsb-release && echo "deb http://download.rethinkdb.com/apt $DISTRIB_CODENAME main" | sudo tee /etc/apt/sources.list.d/rethinkdb.list`
+         `wget -qO- https://download.rethinkdb.com/apt/pubkey.gpg | sudo apt-key add -`
+         `sudo apt-get update`
+         `sudo apt-get install -y rethinkdb`
 
    **Debian-based Linux:**
-        `echo "deb http://download.rethinkdb.com/apt ``lsb_release -cs`` main" | sudo tee /etc/apt/sources.list.d/rethinkdb.list\
-         wget -qO- https://download.rethinkdb.com/apt/pubkey.gpg | sudo apt-key add -
-         sudo apt-get update
-         sudo apt-get install -y rethinkdb`
+        `echo "deb http://download.rethinkdb.com/apt ``lsb_release -cs`` main" | sudo tee /etc/apt/sources.list.d/rethinkdb.list\`
+         `wget -qO- https://download.rethinkdb.com/apt/pubkey.gpg | sudo apt-key add -`
+         `sudo apt-get update`
+         `sudo apt-get install -y rethinkdb`
 
    **CentOS 6 (Works on most RPM-based Linux):**
         `sudo wget http://download.rethinkdb.com/centos/6/``uname -m``/rethinkdb.repo \
-         -O /etc/yum.repos.d/rethinkdb.repo
-         sudo yum install rethinkdb`
+         -O /etc/yum.repos.d/rethinkdb.repo`
+         `sudo yum install rethinkdb`
 
    **CentOS 7 (Works on most RPM-based Linux):**
         `sudo wget http://download.rethinkdb.com/centos/7/``uname -m``/rethinkdb.repo \
-         -O /etc/yum.repos.d/rethinkdb.repo
-         sudo yum install rethinkdb`
+         -O /etc/yum.repos.d/rethinkdb.repo`
+         `sudo yum install rethinkdb`
              
 #### NodeJS
    *For other systems please see: <https://nodejs.org/en/download/package-manager/>*
 
    **Debian-based Linux:**
-        `curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
-         sudo apt-get install -y nodejs
-         sudo apt-get install -y build-essential`
+        `curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -`
+         `sudo apt-get install -y nodejs`
+         `sudo apt-get install -y build-essential`
 
    **RPM-based Linux:**
-        `curl --silent --location https://rpm.nodesource.com/setup_8.x | sudo bash -
-         sudo yum -y install nodejs
-         sudo yum -y install gcc-c++ make`
+        `curl --silent --location https://rpm.nodesource.com/setup_8.x | sudo bash -`
+         `sudo yum -y install nodejs`
+         `sudo yum -y install gcc-c++ make`
 
 
 ### Installation
