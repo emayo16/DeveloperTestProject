@@ -27,4 +27,7 @@
     "speed": "10.6", "course": "90", "heading": "90"}, 
     { "name": "Carnival Ecstacy10", "latitude": "34.78083", 
     "longitude": "-44.9234", "callsign": "H3GR", "mmsid": "353477000", 
-    "speed": "10.6", "course": "90", "heading": "90"}]
+    "speed": "10.6", "course": "90", "heading": "90"},
+	{ "name": "UNDERSEA HUNTER", 
+    "latitude": "30.5899696", "longitude": "-117.440498", "callsign": "YJWD2", 
+    "mmsid": "577357000", "speed": "7.5", "course": "197", "heading": "180"}]

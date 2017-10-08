@@ -102,9 +102,9 @@ angular.module('myApp')
 			var mapCanvas = document.getElementById('map');
 			var mapOptions = {
 			    center: location,
-			    zoom: 5,
+			    zoom: 4,
 			    panControl: true,
-			    mapTypeId: google.maps.MapTypeId.TERRAIN
+			    mapTypeId: google.maps.MapTypeId.SATELLITE
 			}
 			map = new google.maps.Map(mapCanvas, mapOptions);
 			addMarkers(tracks, map);
@@ -116,9 +116,7 @@ angular.module('myApp')
 			var uniqueId = 0;
 			var uniqueTitle = "";
 			var image = {
-			  url: 'app/client/images/ship.svg',
-			  size: new google.maps.Size(500, 500),
-			  scaledSize: new google.maps.Size(36, 36),
+			  url: 'app/client/images/cruise-ship-icon-32.png',
 			  origin: new google.maps.Point(0, 0),
 			  anchor: new google.maps.Point(0, 0)
 			};
@@ -134,6 +132,7 @@ angular.module('myApp')
 				var heading = tracks[i]["heading"];
 				var course = tracks[i]["course"];
 				var speed = tracks[i]["speed"];
+				var createdAt = tracks[i]["createdAt"];
 				if(name === '' || name == null){
 					console.log("Missing name value for track with mmsid "
 					 + mmsid + "\nSkipping this track.");
@@ -161,9 +160,6 @@ angular.module('myApp')
 				
 				latitude = parseFloat(latitude);
 				longitude = parseFloat(longitude);
-				speed += " kn";
-				heading += " degrees";
-				course += " degrees";
 				uniqueId += 1;
 				var uniqueMmsid = mmsid + "-" + uniqueId;
 
@@ -183,18 +179,22 @@ angular.module('myApp')
 				                course: course,
 				                heading: heading,
 				                uniqueMmsid: uniqueMmsid,
-				                uniqueId: uniqueId
+				                uniqueId: uniqueId,
+				                createdAt: createdAt
 				             });
 
 				// Add click event to marker to display track properties in infowindow
 				marker.addListener('click', function (event) {
-
+					var date = this.createdAt.split('T');
+					var time = date[1].split('Z')[0];
+					date = date[0];
 					// Marker window overlay content
-					var contentString = 
+					var contentString = '<div class="container-fluid">' +
+						'<div class="row">' +
 						'<div class="info-window" id="' + this.uniqueMmsid + '">\n' +
-						'<h3>' + this.name + '</h3>\n' +
+						'<div class="col-md-4"></div>' + '<h3 class="col-md-8">' + this.name + '</h3>\n' +
 						'<div class="info-content">\n' +
-						'<table class="table">\n' +
+						'<table class="table table-bordered table-condensed">\n' +
 						'<tr>\n' +
 						'<th>Name' +
 						'</th>\n' +
@@ -212,6 +212,10 @@ angular.module('myApp')
 						'</th>\n' +
 						'<th>Course' +
 						'</th>\n' +
+						'<th>Last Reported On' +
+						'</th>\n' +
+						'<th>Last Reported At' +
+						'</th>\n' +
 						'</tr>\n' +
 						'<tr>\n' +
 						'<td>' + this.name +
@@ -220,19 +224,25 @@ angular.module('myApp')
 						'</td>\n' +
 						'<td>' + this.callsign +
 						'</td>\n' +
-						'<td>' + this.latitude +
+						'<td>' + this.latitude + '°' +
 						'</td>\n' +
-						'<td>' + this.longitude +
+						'<td>' + this.longitude + '°' +
 						'</td>\n' +
-						'<td>' + this.speed +
+						'<td>' + this.speed + ' kn' +
 						'</td>\n' +
-						'<td>' + this.heading +
+						'<td>' + this.heading + '°' +
 						'</td>\n' +
-						'<td>' + this.course +
+						'<td>' + this.course + '°' +
+						'</td>\n' +
+						'<td>' + date +
+						'</td>\n' +
+						'<td>' + time +
 						'</td>\n' +
 						'</tr>\n' +
 						'</table>\n' +
 						'</div>\n' +
+						'</div>' + 
+						'</div>' +
 						'</div>';
 					//console.log(this);
 					infowindow.setContent(contentString);
