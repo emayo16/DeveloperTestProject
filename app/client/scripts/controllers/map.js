@@ -68,7 +68,7 @@ angular.module('myApp')
 		// Removes the markers with the specified mmsid from the map, but keeps them in the array.
 		function clearMarkersByMmsid(mmsid) {
 			for (var i = 0; i < markers.length; i++) {
-				if(markers[i].title === mmsid){
+				if(markers[i].mmsid === mmsid){
 					markers[i].setMap(null);
 				}
 			}
@@ -162,7 +162,7 @@ angular.module('myApp')
 				longitude = parseFloat(longitude);
 				uniqueId += 1;
 				var uniqueMmsid = mmsid + "-" + uniqueId;
-
+				//console.log(mmsid);
 				// Hide other track markers associated with this mmsid
 				clearMarkersByMmsid(mmsid);
 				var marker = new google.maps.Marker({
@@ -179,7 +179,6 @@ angular.module('myApp')
 				                course: course,
 				                heading: heading,
 				                uniqueMmsid: uniqueMmsid,
-				                uniqueId: uniqueId,
 				                createdAt: createdAt
 				             });
 
