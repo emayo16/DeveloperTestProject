@@ -62,9 +62,11 @@
    1. Install all of the prerequisites listed above.
    2. Clone git repository by entering the following in terminal: `git clone "https://github.com/emayo16/DeveloperTestProject.git"`
    3. Run npm install from DeveloperTestProject directory after cloning repository. 
-   4. Next, type `rethinkdb` in terminal to run database server.
-   5. Open a new terminal window and type `node server` to run server.
-   6. Navigate to http://localhost:3000/ in your browser to view site.
+   4. Run `sudo npm install -g bower`
+   5. Next, run `bower install`
+   6. Next, type `rethinkdb` in terminal to run database server.
+   7. Open a new terminal window and type `node server` to run server.
+   8. Navigate to http://localhost:3000/ in your browser to view site.
 
 ## Usage
 
