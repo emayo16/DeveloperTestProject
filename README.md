@@ -28,18 +28,18 @@
          `sudo apt-get install -y rethinkdb`
 
    **Debian-based Linux:**
-        `echo "deb http://download.rethinkdb.com/apt ``lsb_release -cs`` main" | sudo tee /etc/apt/sources.list.d/rethinkdb.list\`
+        `echo "deb http://download.rethinkdb.com/apt `\``lsb_release -cs`\`` main" | sudo tee /etc/apt/sources.list.d/rethinkdb.list\`
          `wget -qO- https://download.rethinkdb.com/apt/pubkey.gpg | sudo apt-key add -`
          `sudo apt-get update`
          `sudo apt-get install -y rethinkdb`
 
    **CentOS 6 (Works on most RPM-based Linux):**
-        `sudo wget http://download.rethinkdb.com/centos/6/``uname -m``/rethinkdb.repo \
+        `sudo wget http://download.rethinkdb.com/centos/6/`\``uname -m`\``/rethinkdb.repo \
          -O /etc/yum.repos.d/rethinkdb.repo`
          `sudo yum install rethinkdb`
 
    **CentOS 7 (Works on most RPM-based Linux):**
-        `sudo wget http://download.rethinkdb.com/centos/7/``uname -m``/rethinkdb.repo \
+        `sudo wget http://download.rethinkdb.com/centos/7/`\``uname -m`\``/rethinkdb.repo \
          -O /etc/yum.repos.d/rethinkdb.repo`
          `sudo yum install rethinkdb`
              
@@ -78,7 +78,7 @@
  
 *Example JSON Request Body:*
 
-		`[{ 
+		[{ 
 			"name": "Carnival Ecstacy", 
 		    "latitude": "32.78083", 
 		    "longitude": "-79.9234", 
@@ -94,4 +94,4 @@
 		    "mmsid": "353478000", 
 		    "speed": "10.6", 
 		    "course": "90", 
-		    "heading": "90"}]`
+		    "heading": "90"}]
