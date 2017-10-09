@@ -67,9 +67,9 @@
    6. Next, type `rethinkdb` in terminal to run database server.
    7. Open a new terminal window and type `node server` to run server.
    8. Navigate to http://localhost:3000/ in your browser to view site.
+   9. If you would like to insert test data, use `node server insertData`
 
 ## Usage
-
    Accepts POST requests containing JSON formatted list of objects (tracking data) with the following properties: name, latitude, longitude, callsign, mmsid, speed, heading, and course.
 
  Uri | Request Method
