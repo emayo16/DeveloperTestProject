@@ -1,21 +1,21 @@
-var r = require('rethinkdb');
+var r = require("rethinkdb");
 
-var dbconfig = {host: 'localhost', port: 28015, db: "testProject"};
+var dbconfig = {host: "localhost", port: 28015, db: "testProject"};
 
 
 r.connect( dbconfig, function(err, conn) {
 	if (err) throw err;
     // Check to see that 'tracks' table is created with index 'createdAt'
-    r.table('tracks').indexWait('createdAt').run(conn).then(function(err, result) {
+    r.table("tracks").indexWait("createdAt").run(conn).then(function(err, result) {
         console.log("tracks table is created.");
     }).error(function(err) {
         // The database/table/index do not exist. Create them.
         r.dbCreate(dbconfig.db).run(conn).finally(function() {
-            return r.tableCreate('tracks').run(conn)
+            return r.tableCreate("tracks").run(conn)
         }).finally(function() {
-            r.table('tracks').indexCreate('createdAt').run(conn);
+            r.table("tracks").indexCreate("createdAt").run(conn);
         }).finally(function(result) {
-            r.table('tracks').indexWait('createdAt').run(conn)
+            r.table("tracks").indexWait("createdAt").run(conn)
         }).then(function(result) {
             console.log("'tracks' table was created with index 'createdAt'");
         }).error(function(err) {

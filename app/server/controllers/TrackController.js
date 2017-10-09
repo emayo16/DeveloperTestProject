@@ -1,9 +1,9 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-var bodyParser = require('body-parser');
+var bodyParser = require("body-parser");
 router.use(bodyParser.urlencoded({ extended: true }));
-var r = require('rethinkdb');
-var dbconfig = {host: 'localhost', port: 28015, db: "testProject"};
+var r = require("rethinkdb");
+var dbconfig = {host: "localhost", port: 28015, db: "testProject"};
 
 function setHeadersAndSend(res, result) {
 	// ALlow cross site requests
@@ -18,10 +18,10 @@ function handleError(res) {
     }
 }
 
-router.get('/tracks', function(req, res, next) {
+router.get("/tracks", function(req, res, next) {
 	r.connect(dbconfig, function(err, conn) {
 		if (err) throw err;
-	    r.table('tracks').orderBy({index: "createdAt"}).run(conn).then(function(cursor) {
+	    r.table("tracks").orderBy({index: "createdAt"}).run(conn).then(function(cursor) {
 	        return cursor.toArray();
 	    }).then(function(result) {
 	        setHeadersAndSend(res, JSON.stringify(result));
@@ -30,7 +30,7 @@ router.get('/tracks', function(req, res, next) {
 	});
 });
 
-router.post('/tracks/new', function(req, res, next) {
+router.post("/tracks/new", function(req, res, next) {
     var tracks = req.body;
 	r.connect(dbconfig, function(err, conn) {
 		if (err) throw err;
@@ -38,17 +38,13 @@ router.post('/tracks/new', function(req, res, next) {
 		for (i in tracks)
 		{
 			tracks[i].createdAt = r.now();
-			r.table('tracks').insert(tracks[i], {returnChanges: true}).run(conn).then(function(result) {
-    			//console.log(result.changes[0].new_val);
+			r.table("tracks").insert(tracks[i], {returnChanges: true}).run(conn).then(function(result) {
 		        if (result.inserted !== 1) {
 		            handleError(res)(new Error("Document was not inserted."));
 		        }
-		        else {
-		        	toSend.push(result.changes[0].new_val);
-		        }
 	    	}).error(handleError(res)).finally(next);
 		}
-		setHeadersAndSend(res, toSend);
+		setHeadersAndSend(res, "success");
 	});
 });
 
